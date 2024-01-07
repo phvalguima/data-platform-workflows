@@ -6,6 +6,11 @@
 on:
   workflow_call:
     inputs:
+      runner:
+        description: |
+          Runner to be used in the collection and integration tests.
+        type: string
+        default: "ubuntu-latest"
       artifact-name:
         description: |
           Name of GitHub artifact that contains the charm package(s)
@@ -91,7 +96,7 @@ jobs:
     # (In the UI, when this workflow is called with a matrix, GitHub will separate each matrix
     # combination and preserve job ordering within a matrix combination.)
     name: ${{ inputs.juju-agent-version || inputs.juju-snap-channel }} | Collect integration test groups
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -129,7 +134,7 @@ jobs:
     needs:
       - get-workflow-version
       - collect-integration-tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
     timeout-minutes: 120
     steps:
       - name: Free up disk space
