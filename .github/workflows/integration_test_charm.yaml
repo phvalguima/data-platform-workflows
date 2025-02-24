@@ -10,7 +10,7 @@ on:
         description: |
           Prefix for charm package GitHub artifact(s)
 
-          Use canonical/data-platform-workflows build_charm.yaml to build the charm(s)
+          Use phvalguima/data-platform-workflows build_charm.yaml to build the charm(s)
         required: true
         type: string
       architecture:
@@ -240,14 +240,14 @@ jobs:
       - name: Get workflow version
         timeout-minutes: 2
         id: workflow-version
-        uses: canonical/get-workflow-version-action@v1
+        uses: phvalguima/get-workflow-version-action@v1
         with:
-          repository-name: canonical/data-platform-workflows
+          repository-name: phvalguima/data-platform-workflows
           file-name: integration_test_charm.yaml
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install CLI
         timeout-minutes: 2
-        run: pipx install git+https://github.com/canonical/data-platform-workflows@'${{ steps.workflow-version.outputs.sha }}'#subdirectory=python/cli
+        run: pipx install git+https://github.com/phvalguima/data-platform-workflows@'${{ steps.workflow-version.outputs.sha }}'#subdirectory=python/cli
       - name: Redact secrets from log
         timeout-minutes: 1
         run: redact-secrets
@@ -339,7 +339,7 @@ jobs:
         if: ${{ inputs.cloud == 'microk8s' && matrix.groups.is_hosted }}
         run: |
           # Wait for microk8s to populate iptables
-          # https://chat.canonical.com/canonical/pl/jo5cg6wqjjrudqd5ybj6hhttee
+          # https://chat.canonical.com/phvalguima/pl/jo5cg6wqjjrudqd5ybj6hhttee
           sudo --user "$USER" --preserve-env --preserve-env=PATH -- env -- microk8s status --wait-ready
 
           sudo tee /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml << EOF
@@ -372,7 +372,7 @@ jobs:
           # (`microk8s config` needs to be run with sudo, but writing to `~/.kube/config` does not)
           sudo --user "$USER" --preserve-env --preserve-env=PATH -- env -- microk8s config > ~/.kube/config
       # Temporarily collect logs to debug intermittent issue
-      # https://github.com/canonical/data-platform-workflows/issues/217
+      # https://github.com/phvalguima/data-platform-workflows/issues/217
       - name: Collect microk8s logs for debugging
         timeout-minutes: 5
         if: ${{ failure() && steps.microk8s-setup.outcome == 'failure' }}
@@ -394,7 +394,7 @@ jobs:
         # Long-term solution: custom runner images
         # Image fingerprint needs to be manually updated
         # When this workaround is removed, revert
-        # https://github.com/canonical/self-hosted-runner-provisioner-azure/commit/a525d114065fda01f626a05bd87d0a6cf96e2a3d
+        # https://github.com/phvalguima/self-hosted-runner-provisioner-azure/commit/a525d114065fda01f626a05bd87d0a6cf96e2a3d
         run: |
           if [[ '${{ inputs.architecture }}' == 'amd64' ]]
           then
@@ -421,7 +421,7 @@ jobs:
           juju set-model-constraints arch='${{ inputs.architecture }}'
           pipx install tox
           pipx install poetry
-          pipx install git+https://github.com/canonical/jhack
+          pipx install git+https://github.com/phvalguima/jhack
       - name: lxc image list
         timeout-minutes: 1
         if: ${{ inputs.cloud == 'lxd' }}
@@ -522,13 +522,13 @@ jobs:
     steps:
       - name: Get workflow version
         id: workflow-version
-        uses: canonical/get-workflow-version-action@v1
+        uses: phvalguima/get-workflow-version-action@v1
         with:
-          repository-name: canonical/data-platform-workflows
+          repository-name: phvalguima/data-platform-workflows
           file-name: integration_test_charm.yaml
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install CLI
-        run: pipx install git+https://github.com/canonical/data-platform-workflows@'${{ steps.workflow-version.outputs.sha }}'#subdirectory=python/cli
+        run: pipx install git+https://github.com/phvalguima/data-platform-workflows@'${{ steps.workflow-version.outputs.sha }}'#subdirectory=python/cli
       - name: Download Allure
         # Following instructions from https://allurereport.org/docs/gettingstarted-installation/#install-via-the-system-package-manager-for-linux
         run: gh release download --repo allure-framework/allure2 --pattern 'allure_*.deb'
