@@ -240,7 +240,7 @@ jobs:
       - name: Get workflow version
         timeout-minutes: 2
         id: workflow-version
-        uses: phvalguima/get-workflow-version-action@add-systemd-logs
+        uses: canonical/get-workflow-version-action@v1
         with:
           repository-name: phvalguima/data-platform-workflows
           file-name: integration_test_charm.yaml
@@ -522,7 +522,7 @@ jobs:
     steps:
       - name: Get workflow version
         id: workflow-version
-        uses: phvalguima/get-workflow-version-action@add-systemd-logs
+        uses: canonical/get-workflow-version-action@v1
         with:
           repository-name: phvalguima/data-platform-workflows
           file-name: integration_test_charm.yaml
